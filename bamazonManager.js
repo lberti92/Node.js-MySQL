@@ -13,7 +13,7 @@ connection.connect(function (err) {
     if (err) throw err;
     console.log("connected as id " + connection.threadId + "\n");
     menuOptions();
-})
+});
 
 function menuOptions() {
     inquirer
@@ -51,7 +51,7 @@ function menuOptions() {
                     break;
             }
         });
-}
+};
 
 function productForSale() {
     connection.query("SELECT * FROM products", function (err, data) {
@@ -60,8 +60,9 @@ function productForSale() {
             console.log("Item ID: " + data[i].item_id + " || Product Name: " + data[i].product_name + " || Price: " + data[i].price + " || Quantity: " + data[i].stock_quantity);
         }
         menuOptions();
-    })
-}
+    });
+};
+
 function lowInventory() {
     connection.query("SELECT * FROM products WHERE stock_quantity <= 5", function (err, data) {
         if (err) throw err;
@@ -69,8 +70,8 @@ function lowInventory() {
             console.log("Item ID: " + data[i].item_id + " || Product Name: " + data[i].product_name + " || Price: " + data[i].price + " || Quantity: " + data[i].stock_quantity);
         }
         menuOptions();
-    })
-}
+    });
+};
 
 function addInventory() {
     connection.query("SELECT * FROM products", function (err, data) {
@@ -102,69 +103,80 @@ function addInventory() {
                         chosenItem = data[i];
                     }
                 }
-            var updateQuantity = chosenItem.stock_quantity + parseInt(answer.quantity);
+                var updateQuantity = chosenItem.stock_quantity + parseInt(answer.quantity);
 
-            connection.query(
-                "UPDATE products SET ? WHERE ?",
-                [
-                    {
-                        stock_quantity: updateQuantity
-                    },
-                    {
-                        product_name: chosenItem.product_name
-                    }
-                ],
-                function(err) {
-                    if (err) throw err;
-                    console.log(`Successfully updated quantity to ${updateQuantity}. \n`);
-                    menuOptions();
-                })
-            })
-    })
-}
+                connection.query(
+                    "UPDATE products SET ? WHERE ?",
+                    [
+                        {
+                            stock_quantity: updateQuantity
+                        },
+                        {
+                            product_name: chosenItem.product_name
+                        }
+                    ],
+                    function (err) {
+                        if (err) throw err;
+                        console.log(`Successfully updated quantity to ${updateQuantity}. \n`);
+                        menuOptions();
+                    });
+            });
+    });
+};
 
 function newProduct() {
     inquirer
-    .prompt ([
-        {
-            name: "item",
-            type: "input",
-            message: "Input item id: "
-        },
-        {
-            name: "product",
-            type: "input",
-            message: "Input name of product: "
-        },
-        {
-            name: "department",
-            type: "input",
-            message: " Input name of department: "
-        },
-        {
-            name: "price",
-            type: "input",
-            message: " Input price of the product: ",
-            validate: function (value) {
-                if (isNaN(value)) {
-                    return false;
+        .prompt([
+            {
+                name: "item",
+                type: "input",
+                message: "Input item id: "
+            },
+            {
+                name: "product",
+                type: "input",
+                message: "Input name of product: "
+            },
+            {
+                name: "department",
+                type: "input",
+                message: "Input name of department: "
+            },
+            {
+                name: "price",
+                type: "input",
+                message: "Input price of the product: ",
+                validate: function (value) {
+                    if (isNaN(value)) {
+                        return false;
+                    }
+                    return true;
                 }
-                return true;
-            }
-        },
-        {
-            name: "quantity",
-            type: "input",
-            message: " Input quantity of the product: ",
-            validate: function (value) {
-                if (isNaN(value)) {
-                    return false;
+            },
+            {
+                name: "quantity",
+                type: "input",
+                message: "Input quantity of the product: ",
+                validate: function (value) {
+                    if (isNaN(value)) {
+                        return false;
+                    }
+                    return true;
                 }
-                return true;
-            }
-        },
-    ]).then(function(answer) {
-        
-    })
-
-}
+            },
+        ]).then(function (answer) {
+            connection.query("INSERT INTO products SET ?",
+                {
+                    item_id: answer.item,
+                    product_name: answer.product,
+                    department_name: answer.department,
+                    price: answer.price,
+                    stock_quantity: answer.quantity
+                },
+                function (err) {
+                    if (err) throw err;
+                    console.log("The new product was successfully added!");
+                    productForSale();
+                });
+        });
+};
