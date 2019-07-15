@@ -93,7 +93,13 @@ function addInventory() {
                 {
                     name: "quantity",
                     type: "input",
-                    message: "How much quantity to add."
+                    message: "How much quantity to add: ",
+                    validate: function (value) {
+                        if (isNaN(value)) {
+                            return "Please input a correct quantity number?";
+                        }
+                        return true;
+                    }
                 }
             ])
             .then(function (answer) {
@@ -130,7 +136,13 @@ function newProduct() {
             {
                 name: "item",
                 type: "input",
-                message: "Input item id: "
+                message: "Input item id: ",
+                validate: function (value) {
+                    if (isNaN(value)) {
+                        return "Please input a correct department number?";
+                    }
+                    return true;
+                }
             },
             {
                 name: "product",
