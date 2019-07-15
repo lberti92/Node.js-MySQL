@@ -47,19 +47,19 @@ function productToSale() {
                     return true;
                 }
             },
-            
+
         ]).then(function (answer) {
-                  var chosenItem;
+            var chosenItem;
             for (var i = 0; i < data.length; i++) {
 
                 if (data[i].item_id === parseInt(answer.idItem)) {
-                    chosenItem = data[i];   
+                    chosenItem = data[i];
                 }
             }
             if (chosenItem.stock_quantity >= parseInt(answer.units)) {
                 var updateStock = chosenItem.stock_quantity - answer.units;
                 var purchasePrice = chosenItem.price * answer.units;
-                
+
                 connection.query(
                     "UPDATE products SET ? WHERE ?",
                     [
@@ -72,7 +72,7 @@ function productToSale() {
                     ],
                     function (error) {
                         if (error) throw err;
-                        console.log("Purchased placed successfully!")  
+                        console.log("Purchased placed successfully!")
                         console.log(`Your cost for the ${answer.units} ${chosenItem.product_name} is $${purchasePrice.toFixed(2)}.  Thank you for your purchase!!`);
                         connection.end();
                     }

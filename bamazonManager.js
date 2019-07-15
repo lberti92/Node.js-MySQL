@@ -139,7 +139,7 @@ function newProduct() {
                 message: "Input item id: ",
                 validate: function (value) {
                     if (isNaN(value)) {
-                        return "Please input a correct department number?";
+                        return "Please input a correct item id number?";
                     }
                     return true;
                 }
@@ -160,7 +160,7 @@ function newProduct() {
                 message: "Input price of the product: ",
                 validate: function (value) {
                     if (isNaN(value)) {
-                        return false;
+                        return "Please input a correct price.";
                     }
                     return true;
                 }
@@ -171,13 +171,21 @@ function newProduct() {
                 message: "Input quantity of the product: ",
                 validate: function (value) {
                     if (isNaN(value)) {
-                        return false;
+                        return "Please input a correct quantity.";
                     }
                     return true;
                 }
             },
         ]).then(function (answer) {
-            connection.query("INSERT INTO products SET ?",
+            connection.query("SELECT * FROM products", function (err, data) {
+                if (err) throw err;
+                for (var i = 0; i < data.length; i++) {
+                    if (data[i].item_id === parseInt(answer.item)) {
+                        console.log("Item ID was a duplicate!!\n\n");
+                        menuOptions();
+                    }
+                }
+                connection.query("INSERT INTO products SET ?",
                 {
                     item_id: answer.item,
                     product_name: answer.product,
@@ -190,5 +198,6 @@ function newProduct() {
                     console.log("The new product was successfully added!");
                     productForSale();
                 });
+            });
         });
-};
+    }
