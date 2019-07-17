@@ -73,13 +73,13 @@ function productToSale() {
                     function (error) {
                         if (error) throw err;
                         console.log("Purchased placed successfully!")
-                        console.log(`Your cost for the ${answer.units} ${chosenItem.product_name} is $${purchasePrice.toFixed(2)}.  Thank you for your purchase!!`);
+                        console.log(`Your cost for the ${answer.units} ${chosenItem.product_name} is $${purchasePrice.toFixed(2)}.  Thank you for your purchase!!\n\n`);
                         connection.end();
                     }
                 );
             }
             else {
-                console.log("Insufficient Quantity!! Try again...");
+                console.log("Insufficient Quantity!! Try again...\n\n");
                 productToSale();
             }
         });

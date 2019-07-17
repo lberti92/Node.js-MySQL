@@ -183,6 +183,7 @@ function newProduct() {
                     if (data[i].item_id === parseInt(answer.item)) {
                         console.log("Item ID was a duplicate!!\n\n");
                         menuOptions();
+                        return true;
                     }
                 }
                 connection.query("INSERT INTO products SET ?",
