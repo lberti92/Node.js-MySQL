@@ -63,7 +63,7 @@ Week 11 (Node.js-MySQL) Assignment
 - - -
 
 ##Video(GIF) of Node.js-MySQL
-![Gif of Node.js](.gif)
+![Gif of Node.js](node.js_mySQL.gif)
 
 ## Tech used
 - Node.js
